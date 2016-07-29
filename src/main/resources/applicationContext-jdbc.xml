@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+          http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+          http://www.springframework.org/schema/data/repository
+		  http://www.springframework.org/schema/data/repository/spring-repository-1.5.xsd">
+	<context:property-placeholder location="classpath:resources.properties" />
+	
+    
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+			<property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml" />
+			<property name="persistenceUnitName" value="${jpa.persistenceUnitName}"/>
+			<property name="jpaVendorAdapter">
+			<bean
+				class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
+				<property name="generateDdl" value="${jpa.generateDdl}"/>
+                <property name="database" value="${jpa.database}"/>
+                <property name="showSql" value="${jpa.showSql}"/>
+			</bean>
+		</property>
+		<property name="jpaPropertyMap">
+			<map>
+				<entry key="eclipselink.weaving" value="false" />
+				<entry key="eclipselink.connection-pool.default.initial" value="1" />
+				<!-- <entry key="eclipselink.connection-pool.default.shared" value="true" /> -->
+				<entry key="eclipselink.connection-pool.default.max" value="150" />
+				<entry key="eclipselink.connection-pool.default.min" value="1" />
+				<entry key="eclipselink.jdbc.read-connections.min" value="20" />
+				<entry key="eclipselink.jdbc.write-connections.min" value="20" />
+				<entry key="eclipselink.jdbc.batch-writing" value="JDBC" />
+				<!-- <entry key="eclipselink.cache.size.default" value="50000"/>
+				<entry key="eclipselink.cache.type.default" value="Soft"/>
+				<entry key="eclipselink.jdbc.cache-statements" value="true"/>
+				<entry key="eclipselink.jdbc.cache-statements.size" value="100000"/>
+	
+				<entry key="eclipselink.weaving.changetracking" value="true"/>  
+				<entry key="eclipselink.jdbc.read-connections.shared" value="true"/>
+				<entry key="eclipselink.flush-clear.cache" value="Drop"/> -->
+			</map>
+		</property>
+	</bean>
+	
+	<!--事务管理器配置-->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory"/> 
+	</bean>
+	
+	<jpa:repositories
+            base-package="com.forerunner.core.base.repository"
+            factory-class="com.forerunner.core.base.repository.support.SimpleBaseRepositoryFactoryBean"
+            entity-manager-factory-ref="entityManagerFactory"   
+            transaction-manager-ref="transactionManager"
+            repository-impl-postfix="Impl"/>
+             
+    <!-- 启用支持Annotation注解方式的事务管理 -->
+	<!-- <tx:annotation-driven /> -->
+	<!-- Detect @Transactional -->
+     <tx:annotation-driven transaction-manager="transactionManager" />
+     
+     <!-- 类型转换及数据格式化 -->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean"></bean>
+    
+    <bean id="domainClassConverter" class="org.springframework.data.repository.support.DomainClassConverter">
+        <constructor-arg ref="conversionService"/>
+    </bean>
+</beans>

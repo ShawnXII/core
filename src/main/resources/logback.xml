@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+	<!-- 控制台 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger -
+				%msg%n</pattern>
+		</encoder>
+	</appender>
+	<!-- 出错日志 appender -->
+	<appender name="ERROR"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 按天回滚 daily -->
+			<!-- log.dir 在maven profile里配置 -->
+			<fileNamePattern>logdir/core-error-%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<!-- 日志最大的历史 60天 -->
+			<maxHistory>60</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger -
+				%msg%n</pattern>
+		</encoder>
+	</appender>
+	<!-- 访问日志 appender -->
+	<appender name="ACCESS"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 按天回滚 daily -->
+			<fileNamePattern>logdir/core-access-%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<!-- 日志最大的历史 60天 -->
+			<maxHistory>60</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger -
+				%msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- 访问日志 appender -->
+	<appender name="SYS-USER"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 按天回滚 daily -->
+			<fileNamePattern>logdir/core-sys-user-%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<!-- 日志最大的历史 60天 -->
+			<maxHistory>60</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger -%msg%n</pattern>
+		</encoder>
+	</appender>
+	<!-- 访问日志 appender -->
+	<appender name="SYS-JOB"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 按天回滚 daily -->
+			<fileNamePattern>logdir/sys-job-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- 日志最大的历史 120天 -->
+			<maxHistory>120</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger -%msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<root level="info">
+	</root>
+
+	<!--<logger name="org.apache" level="debug"> -->
+	<!--<appender-ref ref="STDOUT"/> -->
+	<!--</logger> -->
+
+	<!--错误日志 -->
+	<logger name="error" level="error">
+		<appender-ref ref="ERROR" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<!--访问日志 -->
+	<logger name="access" level="info">
+		<appender-ref ref="ACCESS" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<!--系统用户操作日志 -->
+	<logger name="sys-user" level="info">
+		<appender-ref ref="SYS-USER" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<!--系统用户操作日志 -->
+	<logger name="sys-job" level="info">
+		<appender-ref ref="SYS-JOB" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<!-- spring -->
+	<!-- <logger name="org.springframework.security" level="debug"> <appender-ref 
+		ref="STDOUT"/> </logger> <logger name="org.springframework.web" level="debug"> 
+		<appender-ref ref="STDOUT"/> </logger> -->
+
+</configuration>

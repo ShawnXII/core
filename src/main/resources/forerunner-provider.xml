@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+<dubbo:application name="core-provider" owner="forerunnerOwn" organization="forerunner"/>
+
+<dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+
+<dubbo:annotation package="com.forerunner.foundation.service" />
+
+<dubbo:protocol name="dubbo" serialization="kryo" payload="83886080" host="127.0.0.1" port="20882"/>
+
+</beans>
